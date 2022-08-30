@@ -1,0 +1,134 @@
+{% extends "base.html" %} {% block title %}Cart{% endblock %} {% block main %}
+  <body>
+    <!-- Breadcrumb Section Begin -->
+    <section class="breadcrumb-option">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="breadcrumb__text">
+              <h4>Shopping Cart</h4>
+              <div class="breadcrumb__links">
+                <a href="{{ url_for('home') }}">Home</a>
+                <a href="{{ url_for('products') }}">Shop</a>
+                <span>Shopping Cart</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Breadcrumb Section End -->
+
+    <!-- Shopping Cart Section Begin -->
+    <section class="shopping-cart spad">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-8">
+            <div class="shopping__cart__table">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Total</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for item in user_cart %}
+                  <tr>
+                    {% if item != None %}
+                    <td class="product__cart__item">
+                      <div class="product__cart__item__pic">
+                        <img
+                          src="/static/img/product/{{ item.image }}"
+                          width="110"
+                          alt=""
+                        />
+                      </div>
+                      <div class="product__cart__item__text">
+                        <form action="{{ url_for('cart') }}" method="POST">
+                          <input type="text" name="id" value="{{ item.id }}" style="display: none;" />
+                        <h6>{{ item.name|capitalize }}</h6>
+                        <h5 id="cartprice">${{ item.price }}</h5>
+                      </div>
+                    </td>
+                    <td class="quantity__item">
+                      <div class="quantity">                        
+                          <!-- "loop.index0" IS IMPORTANT AS IT STARTS INDEXING FROM 0 -->
+                          <p>{{ quantity[loop.index0].quantity }}</p>                         
+                      </div>
+                    </td>
+                    <td class="cart__price">
+                      ${{ (item.price|float *
+                      quantity[loop.index0].quantity|float)|round(2) }}
+                    </td>
+                    
+                      <td
+                        class="cart__close mt-4"
+                        id="deleteButton"
+                        type="button"
+                      >
+                        <i class="fa fa-close">
+                          <input
+                            type="submit"
+                            id="hiddenSubmit"
+                            style="display: none"
+                          />
+                        </i>
+                      </td>
+                    </form>
+                  </tr>                  
+                  {% endif %}
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <div class="row">
+              <div class="col-lg-6 col-md-6 col-sm-6"></div>
+              <div class="col-lg-6 col-md-6 col-sm-6">
+                <div class="continue__btn update__btn">
+                  <a href="{{ url_for('products') }}" id="form_a"
+                    ><i class="fa fa-arrow-left"></i>Continue shopping</a
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="cart__discount">
+              <h6>Discount codes</h6>
+              <form action="#">
+                <input type="text" placeholder="Coupon code" />
+                <button type="submit">Apply</button>
+              </form>
+            </div>
+            <div class="cart__total">
+              <h6>Cart total</h6>
+              <ul>
+                <li>
+                  Total
+                  <span>${{ (total|sum)|round(2) }}</span>
+                </li>
+              </ul>
+              {% if (total|sum)|round(2) > 0 %}
+              <a href="{{ url_for('checkout') }}" class="primary-btn">Proceed to checkout</a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script>
+      const deleteButton = document.querySelectorAll("#deleteButton");
+      const hiddenSubmit = document.querySelectorAll("#hiddenSubmit");
+
+      deleteButton.forEach((btn) => {
+        btn.onclick = () =>
+          hiddenSubmit.forEach((hSubmit) => {
+            hSubmit.click();
+          });
+      });
+    </script>
+  </body>
+{% endblock %}

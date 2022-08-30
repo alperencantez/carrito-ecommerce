@@ -1,0 +1,83 @@
+{% extends "base.html" %} {% block title %}Edit items{% endblock %} {% block main %}
+  <body>
+    <!-- Blog Details Section Begin -->
+    <section class="blog-details spad">
+      <div class="container">
+        <div class="row d-flex justify-content-center">
+          <div class="col-lg-8 mt-5 pt-5">
+              <div class="blog__details__comment">
+                {% if deletion %}
+                <h2 class="mt-2 mb-2">Delete or Edit Products</h2>
+                <h5 class="mb-4"><a href="{{ url_for('merchant_home') }}" class="text-danger">You can click here to add an item</a></h4>
+                  <div class="d-flex">
+                    <div class="row">
+                {% for i in data %}
+                  <div class="card mx-2 my-2" style="width: 14rem;">
+                    <img src="/static/img/product/{{ i.image }}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                      <h5 class="card-title">{{ i.name|capitalize }}</h5>
+                      <b class="card-text">${{ i.price }}</b>
+                      <p class="card-text">{{ i.desc }}</p>
+                    </div>
+                    <div class="card-body">
+                      <form action="{{ url_for('merchant_home', del=True, id=i.id)}}" method="POST">
+                        <input type="text" name="new_name" placeholder="Enter the new name"/>
+                        <input type="number" name="new_price" step="any" placeholder="Enter the new price"/>
+                        <input type="text" name="new_img" placeholder="Enter the new image"/>
+                        <input type="text" name="new_desc" placeholder="Enter the new desc"/>
+
+                        <input class="btn btn-primary text-light" name="edit" value="Save" type="submit">              
+                        <input class="btn btn-danger text-light" name="edit" value="Delete" type="submit">              
+                      </form>                      
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+              </div>
+                {% else %}
+
+                <h2 class="mt-4 mb-2">Add a new product</h2>
+                <h5 class="mb-4"><a href="{{ url_for('merchant_home', del=True) }}" class="text-danger">You can click here to delete or make changes on an existing item</a></h4>
+                <span class="text-muted">* required</span>          
+                <form method="POST">
+                  <div class="row">
+                    <div class="col-lg-12 mt-3 col-md-12">
+                      <input type="text" placeholder="*Name" name="name" required />
+                    </div>
+                    <div class="col-lg-12 col-md-12">
+                      <input type="number" step="any" placeholder="*Price" name="price" required />
+                    </div>
+                    <div class="col-lg-12 col-md-12">
+                      <input type="text" placeholder="*Image" name="image" required/>
+                    </div>
+                    <div class="col-lg-12 text-center">
+                      <textarea placeholder="Description" name="desc"></textarea>
+                      {% with messages =
+                        get_flashed_messages() %} {% if messages %}
+                        <ul class="flashes mt-3" style="padding: 0">
+                          {% for message in messages %}
+                          <li style="list-style-type: none; font-weight: 600">
+                            {% if "exists" in message %}
+                            <h4 style="color: rgb(216, 8, 8);">{{ message }}</h4>
+                            {% else %}
+                            <h4 style="color: green;">{{ message }}</h4>
+                            {% endif %}
+                          </li>
+                          {% endfor %}
+                        </ul>
+                        {% endif %} {% endwith %}
+                      <button type="submit" class="site-btn">
+                        Publish for sale
+                      </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+</body>
+{% endblock %}
