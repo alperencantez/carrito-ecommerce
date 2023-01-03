@@ -284,8 +284,8 @@ def checkout():
                         "quantity": 1
                     }],
                     mode="payment",
-                    success_url="/checkout/success",
-                    cancel_url="/checkout"
+                    success_url="https://carrito.onrender.com/checkout/success",
+                    cancel_url="https://carrito.onrender.com/checkout"
                 )
 
                 return redirect(session.url, 303)
